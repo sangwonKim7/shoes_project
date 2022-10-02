@@ -1,12 +1,17 @@
 package com.javalec.base;
 
+import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Main {
 
-	private JFrame frame;
+	public static JFrame frame;
+	public static JPanel panel1 = new Panel1();
 
 	/**
 	 * Launch the application.
@@ -36,8 +41,9 @@ public class Main {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 470);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(panel1);
 	}
 
 }

@@ -51,8 +51,8 @@ public class Panel1 extends JPanel {
 		JButton btnLogIn = new JButton("log in");
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String id = tfID.getText().trim();
-				String pw = tfPassword.getText().trim();
+				Main.panel1.setVisible(false);
+				Main.frame.add(new Panel3());
 
 
 				
@@ -65,6 +65,8 @@ public class Panel1 extends JPanel {
 		JButton btnSignUp = new JButton("sign up");
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Main.panel1.setVisible(false);
+				Main.frame.add(new Panel2());
 			}
 		});
 		btnSignUp.setFont(new Font("Times New Roman", Font.PLAIN, 12));

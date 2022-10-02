@@ -14,8 +14,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -43,6 +48,17 @@ public class Panel4 extends JPanel {
 	 * Create the panel.
 	 */
 	public Panel4() {
+		addAncestorListener(new AncestorListener() {
+			public void ancestorAdded(AncestorEvent event) {
+				tableInit();
+				searchAction();
+			}
+			public void ancestorMoved(AncestorEvent event) {
+			}
+			public void ancestorRemoved(AncestorEvent event) {
+			}
+		});
+		
 		setLayout(null);
 		add(getLbImage());
 		add(getLbBrand());
@@ -140,6 +156,16 @@ public class Panel4 extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					clickAmount = cbAmount.getSelectedIndex() + 1;
 					insertAction();
+					
+					setVisible(false);
+					Main.frame.add(new Panel5());
+					Main.frame.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowActivated(WindowEvent e) {
+							tableInit(); // 테이블을 만든다.이것 부터 작업을 해야 된다.
+							searchAction(); // 검색을 한다.
+						}
+					});
 				}
 			});
 			btnCart.setBounds(296, 394, 117, 29);
@@ -209,19 +235,4 @@ public class Panel4 extends JPanel {
 			JOptionPane.showMessageDialog(null, "장바구니에 담겼습니다.");
 		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 } // End
