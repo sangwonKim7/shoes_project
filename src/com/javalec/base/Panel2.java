@@ -97,7 +97,7 @@ public class Panel2 extends JPanel {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				Main.panel1.setVisible(true);
+				Main.frame.getContentPane().add(new Panel1());
 			}
 		});
 		btnNewButton_1.setBounds(218, 395, 116, 26);

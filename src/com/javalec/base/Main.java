@@ -1,9 +1,6 @@
 package com.javalec.base;
 
-import java.awt.CardLayout;
 import java.awt.EventQueue;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,7 +8,7 @@ import javax.swing.JPanel;
 public class Main {
 
 	public static JFrame frame;
-	public static JPanel panel1 = new Panel1();
+	public JPanel panel1 = new Panel1();
 
 	/**
 	 * Launch the application.
@@ -29,6 +26,7 @@ public class Main {
 		});
 	}
 
+
 	/**
 	 * Create the application.
 	 */
@@ -36,6 +34,7 @@ public class Main {
 		initialize();
 	}
 
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */

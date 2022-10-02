@@ -2,7 +2,6 @@ package com.javalec.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -12,63 +11,49 @@ import com.javalec.dto.DtoDetail;
 import com.javalec.util.DBConnect;
 
 public class DaoDetail {
-
-	int p_product_no;
-	int detail_no;
-	int size;
-	int stock;
-
-	int price;
-	int amount;
+	private int detail_no;
 	
-	String guest_id;
-	
-	Panel3 productPanel = new Panel3();
-
-	// Constructor
 	public DaoDetail() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public DaoDetail(int detail_no, int size, int stock) {
-		super();
-		this.detail_no = detail_no;
-		this.size = size;
-		this.stock = stock;
-	}
-
-	public DaoDetail(int size, int stock) {
-		super();
-		this.size = size;
-		this.stock = stock;
-	}
-	
-
-	public DaoDetail(int size) {
-		super();
-		this.size = size;
-	}
-	
-	
-
-	
-	
-	public DaoDetail(String guest_id, int detail_no, int p_product_no, int price, int amount) {
-		super();
-		this.guest_id = guest_id;
-		this.detail_no = detail_no;
-		this.p_product_no = p_product_no;
-		this.price = price;
-		this.amount = amount;
-	}
-
-	// Method
-	public ArrayList<DtoDetail> selectList(){
 		
-		ArrayList<DtoDetail> dtoList = new ArrayList<DtoDetail>();
+	}
+	
+	public DaoDetail(int detail_no) {
+		this.detail_no = detail_no;
+	}
+	
+	public ArrayList<DtoDetail> searchAction() {
+		ArrayList<DtoDetail> dtoDetail = new ArrayList<>();
 
-		String whereStatement = "select detail_no, size, stock from detail ";
-		String whereStatement2 = "where p_product_no = " + Panel3.clickNo;
+		String whereStatement = "select detail_no , size, stock from detail";
+		String whereStatement2 = " where p_product_no = " + Panel3.clickNo;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver"); 
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql); 
+			Statement stmt_mysql = conn_mysql.createStatement(); 
+			
+			ResultSet rs = stmt_mysql.executeQuery(whereStatement + whereStatement2);
+
+			while (rs.next()) {
+				dtoDetail.add(new DtoDetail(rs.getInt(1),rs.getInt(2),rs.getInt(3)));
+			}
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace(); // 개발 할 때는 이렇게, product를 만들 때는 경고문장을 넣어주면 된다.
+		}
+		return dtoDetail;
+	}
+	
+	// 클릭한 거 가격, 브랜드, 모델명 , 사이즈 보여주기
+	public DtoDetail tableClick() {
+		DtoDetail dto = null;
+		
+		String whereStatement = "select p_product_no, size from detail "; // 마지막 띄워주기
+		String whereStatement2 = "where detail_no = " + detail_no;
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql, DBConnect.pw_mysql);
@@ -76,55 +61,19 @@ public class DaoDetail {
 	
 			ResultSet rs = stmt_mysql.executeQuery(whereStatement + whereStatement2);
 	
-			while (rs.next()) { // true값일때만 가져온다
-				
-				int wkDetailNo = rs.getInt(1);
+			if (rs.next()) { // true값일때만 가져온다
+				int wkNo = rs.getInt(1);
 				int wkSize = rs.getInt(2);
-				int wkStock = rs.getInt(3);
-			
-				DtoDetail dto = new DtoDetail(wkDetailNo,wkSize, wkStock);
-				dtoList.add(dto);
+				dto = new DtoDetail(wkNo,wkSize);
 			}
-	
+			
 			conn_mysql.close();
-	
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return dtoList;
-
+		return dto;
 	}
-	
-	// 입력
-	public boolean insertAction() {
-		PreparedStatement ps = null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql, DBConnect.pw_mysql);
-			Statement stmt_mysql = conn_mysql.createStatement();
-			
-			String query = "insert into cart (c_guest_id, cd_detail_no, cd_product_no, price, amount) "; // *** 마지막 한칸 뛰기 ***
-			String query1 = "values (?,?,?,?,?)";
-			
-			ps = conn_mysql.prepareStatement(query + query1);
-			ps.setString(1, guest_id);
-			ps.setInt(2, detail_no);
-			ps.setInt(3, p_product_no);
-			ps.setInt(4, price);
-			ps.setInt(5, amount);
-			
-			ps.executeUpdate(); // 끝나면 int값이 날라오는구나 / -1은 에러 / 1인지 -1인지 확인 <<< 쓰는이유????????????????????? >>>
-			
-			conn_mysql.close(); // 여러명이 쓴다는것을 생각해야함
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-
-	}
-
-
 	
 }

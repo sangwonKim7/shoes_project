@@ -1,49 +1,48 @@
 package com.javalec.base;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
-import com.javalec.dao.DaoDetail;
-import com.javalec.dto.DtoDetail;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import com.javalec.dao.DaoCart;
+import com.javalec.dao.DaoDetail;
+import com.javalec.dao.DaoProduct;
+import com.javalec.dto.DtoDetail;
+import com.javalec.dto.DtoProduct;
 
 public class Panel4 extends JPanel {
-	private JLabel lbImage;
-	private JLabel lbBrand;
 	private JScrollPane scrollPane;
 	private JButton btnCart;
-	private JLabel lbModel;
-	private JLabel lbPrice;
-	private JComboBox cbAmount;
+	private JLabel lblPrice;
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
+
 	
 	private final DefaultTableModel Outer_Table = new DefaultTableModel(); // ******* 테이블준비하기(1/2) 바깥모양임
-	Panel3 panel3 = new Panel3();
-	public static int clickDetailNo;
-	public static int clickSize;
-	public static int clickAmount;
 	private JTable Inner_Table;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	
+	public static int detail_no;
 
-
+	
 	/**
 	 * Create the panel.
 	 */
@@ -53,95 +52,112 @@ public class Panel4 extends JPanel {
 				tableInit();
 				searchAction();
 			}
+
 			public void ancestorMoved(AncestorEvent event) {
 			}
+
 			public void ancestorRemoved(AncestorEvent event) {
 			}
 		});
-		
+
 		setLayout(null);
-		add(getLbImage());
-		add(getLbBrand());
-		add(getLbModel());
-		add(getLbPrice());
+		add(getLblPrice());
 		add(getScrollPane());
-		add(getCbAmount());
 		add(getLblNewLabel());
 		add(getBtnCart());
 		add(getLblNewLabel_1());
 
+		textField = new JTextField();
+		textField.setEditable(false);
+		textField.setBounds(84, 242, 130, 26);
+		add(textField);
+		textField.setColumns(10);
+
+		JLabel lblModel = new JLabel();
+		lblModel.setText("모델  : ");
+		lblModel.setBounds(33, 280, 39, 22);
+		add(lblModel);
+
+		textField_1 = new JTextField();
+		textField_1.setEditable(false);
+		textField_1.setColumns(10);
+		textField_1.setBounds(84, 278, 130, 26);
+		add(textField_1);
+
+		JLabel lblBrand = new JLabel();
+		lblBrand.setText("브랜드  : ");
+		lblBrand.setBounds(23, 314, 49, 22);
+		add(lblBrand);
+
+		textField_2 = new JTextField();
+		textField_2.setEditable(false);
+		textField_2.setColumns(10);
+		textField_2.setBounds(84, 313, 130, 26);
+		add(textField_2);
+
+		JLabel lblSize = new JLabel();
+		lblSize.setText("사이즈 : ");
+		lblSize.setBounds(23, 351, 45, 22);
+		add(lblSize);
+
+		textField_3 = new JTextField();
+		textField_3.setEditable(false);
+		textField_3.setColumns(10);
+		textField_3.setBounds(84, 349, 130, 26);
+		add(textField_3);
+
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(262, 349, 130, 26);
+		add(textField_4);
+
 	}
-	private JLabel getLbImage() {
-		if (lbImage == null) {
-			lbImage = new JLabel("");
-			lbImage.setBounds(23, 48, 248, 184);
-		}
-		return lbImage;
-	}
-	private JLabel getLbBrand() {
-		if (lbBrand == null) {
-			lbBrand = new JLabel();
-			lbBrand.setText((String) null);
-			lbBrand.setBounds(283, 81, 161, 22);
-		}
-		return lbBrand;
-	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(23, 244, 239, 184);
+			scrollPane.setBounds(23, 48, 400, 184);
 			scrollPane.setViewportView(getInner_Table());
 		}
 		return scrollPane;
 	}
+
 	private JTable getInner_Table() {
 		if (Inner_Table == null) {
 			Inner_Table = new JTable();
 			Inner_Table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(e.getButton() == 1) { //					좌측마우스 클릭 -> 1
-						tableClick(); // 						테이블 클릭 시에 해당 테이블 행의 정보를 int clickNo에 저장
+					if (e.getButton() == 1) {
+						tableClick();
 					}
-	
+
 				}
 			});
 			Inner_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			Inner_Table.setModel(Outer_Table); // 								테이블 세팅하기(2/2) **********
-	
+			Inner_Table.setModel(Outer_Table); // 테이블 세팅하기(2/2) **********
+
 		}
 		return Inner_Table;
 	}
-	private JLabel getLbModel() {
-		if (lbModel == null) {
-			lbModel = new JLabel();
-			lbModel.setText((String) null);
-			lbModel.setBounds(283, 129, 161, 22);
+
+	private JLabel getLblPrice() {
+		if (lblPrice == null) {
+			lblPrice = new JLabel();
+			lblPrice.setText("가격 : ");
+			lblPrice.setBounds(33, 244, 39, 22);
 		}
-		return lbModel;
+		return lblPrice;
 	}
-	private JLabel getLbPrice() {
-		if (lbPrice == null) {
-			lbPrice = new JLabel();
-			lbPrice.setText("0");
-			lbPrice.setBounds(283, 178, 161, 22);
-		}
-		return lbPrice;
-	}
-	private JComboBox getCbAmount() {
-		if (cbAmount == null) {
-			cbAmount = new JComboBox();
-			cbAmount.setBounds(296, 355, 68, 27);
-		}
-		return cbAmount;
-	}
+
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("개");
-			lblNewLabel.setBounds(362, 359, 61, 16);
+			lblNewLabel.setBounds(402, 354, 61, 16);
 		}
 		return lblNewLabel;
 	}
+
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("< 장바구니 >");
@@ -149,90 +165,92 @@ public class Panel4 extends JPanel {
 		}
 		return lblNewLabel_1;
 	}
+
 	private JButton getBtnCart() {
 		if (btnCart == null) {
 			btnCart = new JButton("장바구니에 담기");
 			btnCart.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					clickAmount = cbAmount.getSelectedIndex() + 1;
-					insertAction();
-					
+					insertToCartAction();
 					setVisible(false);
-					Main.frame.add(new Panel5());
-					Main.frame.addWindowListener(new WindowAdapter() {
-						@Override
-						public void windowActivated(WindowEvent e) {
-							tableInit(); // 테이블을 만든다.이것 부터 작업을 해야 된다.
-							searchAction(); // 검색을 한다.
-						}
-					});
+					Main.frame.getContentPane().add(new Panel5());
 				}
 			});
 			btnCart.setBounds(296, 394, 117, 29);
 		}
 		return btnCart;
 	}
-	
+
 	// -------------------------------- Function -----------------------------------
 
 	private void tableInit() {
-		Outer_Table.addColumn("detail_no"); // 1234
-		Outer_Table.addColumn("사이즈"); // 1234
+		Outer_Table.addColumn("detail_no");
+		Outer_Table.addColumn("사이즈");
 		Outer_Table.addColumn("재고");
-	
-		Outer_Table.setColumnCount(3); // 		***************
-	
+
+		Outer_Table.setColumnCount(3);
+
 		int i = Outer_Table.getRowCount();
 		for (int j = 0; j < i; j++) {
 			Outer_Table.removeRow(0);
 		}
-	
-		Inner_Table.setAutoResizeMode(Inner_Table.AUTO_RESIZE_OFF); // 리사이즈 못하게 정의
-	
+
+		Inner_Table.setAutoResizeMode(Inner_Table.AUTO_RESIZE_OFF);
+
 		int vColIndex = 0;
-		TableColumn col = Inner_Table.getColumnModel().getColumn(vColIndex); // 0번부터
+		TableColumn col = Inner_Table.getColumnModel().getColumn(vColIndex);
 		int width = 50;
 		col.setPreferredWidth(width);
-	
+
 		vColIndex = 1;
 		col = Inner_Table.getColumnModel().getColumn(vColIndex);
 		width = 100;
 		col.setPreferredWidth(width);
-		
+
 		vColIndex = 2;
 		col = Inner_Table.getColumnModel().getColumn(vColIndex);
 		width = 100;
 		col.setPreferredWidth(width);
 	}
 
-	// DB to Table
 	private void searchAction() {
-		DaoDetail dao = new DaoDetail();
-		dao.selectList();
-		ArrayList<DtoDetail> dtoList = dao.selectList();
-		
-		int listCount = dtoList.size();
-		
-		for(int index=0; index < listCount; index++) {
-			String[] qTxt = {Integer.toString(dtoList.get(index).getDetail_no()), Integer.toString(dtoList.get(index).getSize()), Integer.toString(dtoList.get(index).getStock())};
+		DaoDetail daoDetail = new DaoDetail();
+		ArrayList<DtoDetail> dtoDetailList = daoDetail.searchAction();
+
+		for (DtoDetail a : dtoDetailList) {
+			String[] qTxt = { Integer.toString(a.getDetail_no()), Integer.toString(a.getSize()),
+					Integer.toString(a.getStock()) };
 			Outer_Table.addRow(qTxt);
-			
-		}	
-	}
-	
-	private void tableClick() {		
-		int i = Inner_Table.getSelectedRow();
-		String wkSequence = (String) Inner_Table.getValueAt(i, 0); // String type으로 바꿔준다
-		clickDetailNo = Integer.parseInt(wkSequence);
+		}
 
 	}
 	
+	private void tableClick() {
+		
+			int selectRow = Inner_Table.getSelectedRow();
+			String wkSequence = (String) Inner_Table.getValueAt(selectRow, 0);
+			detail_no = Integer.parseInt(wkSequence);
+			DaoDetail dao = new DaoDetail(detail_no);
+			DtoDetail dto = dao.tableClick();
+			int a = dto.getP_product_no();
+			DaoProduct daoPro = new DaoProduct(a);
+			DtoProduct dtoPro = daoPro.tableClick();
+			
+			textField_3.setText(Integer.toString(dto.getSize()));
+			textField_1.setText(dtoPro.getModel());
+			textField.setText(Integer.toString(dtoPro.getPrice()));
+			textField_2.setText(dtoPro.getBrand());
+	}
 	
-	private void insertAction() {
-		DaoDetail dao = new DaoDetail("id", clickDetailNo, panel3.clickNo, panel3.clickPrice, clickAmount);
-		boolean ok = dao.insertAction();
-		if (ok == true) {
-			JOptionPane.showMessageDialog(null, "장바구니에 담겼습니다.");
+	private void insertToCartAction() {
+		try {
+			int num = Integer.parseInt(textField_4.getText().trim());
+			DaoCart dao = new DaoCart(Integer.parseInt(textField.getText().trim()), num);
+			dao.insertToCartAction();
+		}catch(NumberFormatException e) {
+			e.printStackTrace();
 		}
 	}
+	
+
 } // End
