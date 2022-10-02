@@ -60,7 +60,7 @@ public class Panel5 extends JPanel {
 
 	}
 
-	private void CarttableInit() {
+	private void CartTableInit() {
 		Outer_Table.addColumn("모델명");
 		Outer_Table.addColumn("사이즈");
 		Outer_Table.addColumn("수량");
