@@ -2,107 +2,161 @@ package com.javalec.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
+import com.javalec.base.Panel1;
+import com.javalec.base.Panel3;
+import com.javalec.base.Panel4;
+import com.javalec.dto.DtoCart;
 import com.javalec.util.DBConnect;
 
-// Àå¹Ù±¸´Ï¿¡ »óÇ°Ãß°¡ 
 public class DaoCart {
-	
-	private int no;
-	private int size;
-	private int detailNo;
-	private int productNo;
 	private int price;
 	private int amount;
-          
+	private int cart_no;
 	
-
-	public DaoCart(int no, int size) {
-		this.no = no;
-		this.size = size;
+	public DaoCart() {
+		
 	}
-	public DaoCart(int size, int detailNo, int productNo, int price, int amount) {
-		this.size = size;
-		this.detailNo = detailNo;
-		this.productNo = productNo;
+	
+	public DaoCart(int cart_no) {
+		this.cart_no = cart_no;
+	}
+	
+	public DaoCart(int price, int amount) {
 		this.price = price;
 		this.amount = amount;
 	}
 	
-	
-	public int searchDetailNo() {
-		int num = 0;
-	 	
-		String whereStatement = "select detail_no from detail where p_product_no= " + no + " and size = " + size ;
-		// Ä«Æ®¿¡ ³ÖÀ» DETAIL NO Ã£±â À§ÇÔ 
-		// Á¶°ÇÀ» °É¾ú±â ¶§¹®¿¡ 1°³¸¸ ³ª¿Â´Ù 
-
+	public int insertToCartAction() {
+		PreparedStatement ps = null;
+		int i = 0;
+		
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver"); // jar ÆÄÀÏ¿¡ ÀÖ´Â°É ·ÎµåÇÑ´Ù 
+			Class.forName("com.mysql.cj.jdbc.Driver"); 
 			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
-					DBConnect.pw_mysql); // µ¥ÀÌÅÍ º£ÀÌ½º¿Í ¿¬°á 
-			Statement stmt_mysql = conn_mysql.createStatement(); // ¿¬°áÇÑ µ¥ÀÌÅÍ º£ÀÌ½ºÀÇ ¿­À» ¹Ş¾Æ¿Ã ÁØºñ  
+					DBConnect.pw_mysql); 
+			String query = "insert into cart (c_guest_id,cd_detail_no,cd_product_no,cart_date,price,amount) ";
+			String query1 = "values (?,?,?,now(),?,?)";
 
-			ResultSet rs = stmt_mysql.executeQuery(whereStatement);
+			ps = conn_mysql.prepareStatement(query + query1);
+			ps.setString(1,Panel1.id);
+			ps.setInt(2,Panel4.detail_no);
+			ps.setInt(3,Panel3.clickNo);
+			ps.setInt(4, price);
+			ps.setInt(5, amount);
 			
-			num = rs.getInt(1); // detailno °ª num¿¡ ´ëÀÔ 
+			i = ps.executeUpdate(); 
 
 			conn_mysql.close();
 
 		} catch (Exception e) {
 			e.printStackTrace(); 
 		}
-		
-		
-		return num; 
+		return i;
 	}
 	
-	//»çÀÌÁî,»óÇ°¸í,±¸¸Å°¹¼ö
-	
-	
-//	// 1. »óÇ°°ú »ó¼¼¼±ÅÃÀÇ ¿¬°á°ü°èÀÎ »ó¼¼¼±ÅÃ¹øÈ£¸¦ ÃßÃâ 
-//	// ---> detail ¿¡¼­ Àç°í°¡ ¾Æ´Ï¶ó size¸¦ ¼±ÅÃÇÑ°Ç È­¸é¿¡ º¸ÀÌ´Â À¯ÀÏÇÑ Á¤º¸¶ó¼­?
-//	//      ´Ù¸¥ ÄÃ·³ÀÌ È­¸é¿¡ º¸¿©Áö¸é ±×°É ¼±ÅÃÇØµµ µÊ?
-//	select detail_no
-//	from detail d, product p
-//	where d.no= '' and d.size ='' ;
-//	
-//	
-//	// 2. Àå¹Ù±¸´Ï¿¡ insert 
-//	insert into cart
-//	(detail_no)
-//	values
-//	(°¡Á®¿Â °ª)
-	
-	// ¾ÆÁ÷ ÀÛ¼º ¾ÈµÊ 
-//	public void addCart() {
-//		int num = searchDetailNo();
-//		
-//		String whereStatement = "insert into cart (" + detailNo + ") values (" + num + ")";
-//				
-//
-//		
-//		
-//	}
-	
-	
-	
-	
-	 	
-	// 1.git¿¡ ¼Ò½º ¿Ã¸®´Â ¹ı
-	
-	// 2.addCart() ¸Ş¼Òµå ÀÛ¼º 
-	
-	// 3. 
-	
-	
-	
-	
-	
-	
-	
-	
+	// ëª¨ë¸ëª…, ì‚¬ì´ì¦ˆ, ìˆ˜ëŸ‰, ë¸Œëœë“œ, ê°€ê²©
+	public ArrayList<DtoCart> searchAction() {
+		ArrayList<DtoCart> dto = new ArrayList<>();
 
+		String whereStatement = "select cart_no, cd_detail_no, cd_product_no, price, amount from cart";
+		String whereStatement2 = " where c_guest_id = '" + Panel1.id + "' and order_date is null and delete_date is null";
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver"); 
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql); 
+			Statement stmt_mysql = conn_mysql.createStatement(); 
+			
+			ResultSet rs = stmt_mysql.executeQuery(whereStatement + whereStatement2);
+
+			while (rs.next()) {
+				dto.add(new DtoCart(rs.getInt(1) ,rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5)));
+			}
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace(); // ê°œë°œ í•  ë•ŒëŠ” ì´ë ‡ê²Œ, productë¥¼ ë§Œë“¤ ë•ŒëŠ” ê²½ê³ ë¬¸ì¥ì„ ë„£ì–´ì£¼ë©´ ëœë‹¤.
+		}
+		return dto;
+	}
+	
+	public int deleteAction() {
+		PreparedStatement ps = null;
+		int i = 0;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver"); // package ì´ë¦„ê³¼ class ì´ë¦„ì„ ì •í•´ì¤€ ê²ƒì´ë‹¤.
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql); 
+			String query = "update cart set delete_date = now() where cart_no = ? and delete_date is null";
+
+			ps = conn_mysql.prepareStatement(query);
+			ps.setInt(1, cart_no); 
+																
+			i = ps.executeUpdate(); 
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace(); // ê°œë°œ í•  ë•ŒëŠ” ì´ë ‡ê²Œ, productë¥¼ ë§Œë“¤ ë•ŒëŠ” ê²½ê³ ë¬¸ì¥ì„ ë„£ì–´ì£¼ë©´ ëœë‹¤.
+		}
+		return i;
+	}
+	
+	
+	public int updateAction() {
+		PreparedStatement ps = null;
+		int i = 0;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql);
+
+			String query = "update cart set order_date = now()";
+			String query2 = "where c_guest_id = ? and order_date is null and delete_date is null";
+
+			ps = conn_mysql.prepareStatement(query + query2);
+			ps.setString(1,Panel1.id);
+
+
+			i = ps.executeUpdate();
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return i;
+	}
+	
+	public int insertToPayAction() {
+		PreparedStatement ps = null;
+		int i = 0;
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver"); 
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql); 
+			String query = "insert into "+ "pay " + "(p_guest_id,pd_detail_no,pd_product_no,date,time,amount,price) ";
+			String query1 = "select c_guest_id,cd_detail_no,cd_product_no,curdate(),curtime(),amount,price "
+					+ "from cart "
+					+ "where c_guest_id = ? and order_date is null and delete_date is null";
+
+			ps = conn_mysql.prepareStatement(query + query1);
+			ps.setString(1,Panel1.id);
+			
+			i = ps.executeUpdate(); 
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace(); 
+		}
+		return i;
+	}
 }

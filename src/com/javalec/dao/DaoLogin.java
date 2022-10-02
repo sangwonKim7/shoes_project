@@ -41,7 +41,8 @@ public class DaoLogin {
 
 	// 1번 메소드
 	public String loginAction() {
-		String whereStatement = "select count(id adn password) from guest where id = '" + id + "' and password = '" + password + "'";
+		String whereStatement = "select count(id and password) from guest where id = '" + id + "' and password = '" + password + "'";
+		int i = 0;
 		String loginId = "";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
@@ -50,14 +51,15 @@ public class DaoLogin {
 			Statement stmt_mysql = conn_mysql.createStatement(); 
 
 			ResultSet rs = stmt_mysql.executeQuery(whereStatement);
-			int i = rs.getInt(1);
 			
-			
-			if( i == 1) {
-				loginId = id;
+			while(rs.next()) {
+				i = rs.getInt(1);
+				if(i == 1) {
+					loginId = id;
+				}
 			}
 			
-
+			
 			conn_mysql.close();
 			
 			
@@ -78,6 +80,8 @@ public class DaoLogin {
 			Statement stmt_mysql = conn_mysql.createStatement(); 
 
 			ResultSet rs = stmt_mysql.executeQuery(whereStatement);
+			
+			
 			int i = rs.getInt(1);
 			
 			

@@ -12,16 +12,12 @@ public class DtoDetail {
 	public DtoDetail() {
 		// TODO Auto-generated constructor stub
 	}
-
 	
-	
-	public DtoDetail(int size, int stock) {
+	public DtoDetail(int p_product_no, int size) {
 		super();
+		this.p_product_no = p_product_no;
 		this.size = size;
-		this.stock = stock;
 	}
-
-
 
 	public DtoDetail(int detail_no, int size, int stock) {
 		super();
