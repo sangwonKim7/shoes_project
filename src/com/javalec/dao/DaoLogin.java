@@ -27,8 +27,7 @@ public class DaoLogin {
 		this.password=password;
 	}
 	
-	public DaoLogin(String id, String password, String address, String name, String phone, String email,
-			String init_date) {
+	public DaoLogin(String id, String password, String address, String name, String phone, String email) {
 		super();
 		this.id = id;
 		this.password = password;
@@ -73,6 +72,7 @@ public class DaoLogin {
 	public boolean overlapCheck() {
 		String whereStatement = "select count(id) from guest where id = '" + id + "'";
 		boolean result = false;
+		int i = 0;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
 			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
@@ -81,8 +81,9 @@ public class DaoLogin {
 
 			ResultSet rs = stmt_mysql.executeQuery(whereStatement);
 			
-			
-			int i = rs.getInt(1);
+			if(rs.next()) {
+				i = rs.getInt(1);
+			}
 			
 			
 			if( i == 0) {
@@ -112,7 +113,7 @@ public class DaoLogin {
 			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
 					DBConnect.pw_mysql); 
 			String query = "insert into guest (id,password,address,name,phone,email,init_date) ";
-			String query1 = "values (?,?,?,?,?,?,now()";
+			String query1 = "values (?,?,?,?,?,?,now())";
 
 			ps = conn_mysql.prepareStatement(query + query1);
 			ps.setString(1, id);

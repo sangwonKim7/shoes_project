@@ -40,9 +40,10 @@ public class Main {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 470);
+		frame.setTitle("신발가게");
+		frame.setBounds(100, 100, 450, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(panel1);
+		frame.getContentPane().add(panel1);
 	}
 
 }

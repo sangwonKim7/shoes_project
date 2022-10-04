@@ -1,21 +1,24 @@
 package com.javalec.base;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import com.javalec.dao.DaoLogin;
 
 public class Panel2 extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
+	private JTextField tfID;
+	private JTextField tfAddress;
+	private JTextField tfEmail;
+	private JTextField tfPhone;
+	private JPasswordField pfPassword;
+	private JTextField tfName;
 
 	/**
 	 * Create the panel.
@@ -23,85 +26,111 @@ public class Panel2 extends JPanel {
 	public Panel2() {
 		setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("\uD68C\uC6D0\uAC00\uC785 \uD654\uBA74");
-		lblNewLabel.setFont(new Font("����", Font.BOLD, 18));
-		lblNewLabel.setBounds(159, 40, 130, 45);
-		add(lblNewLabel);
+		JLabel lblInterface = new JLabel("\uD68C\uC6D0\uAC00\uC785 \uD654\uBA74");
+		lblInterface.setFont(new Font("����", Font.BOLD, 18));
+		lblInterface.setBounds(159, 40, 130, 45);
+		add(lblInterface);
 		
-		JLabel lblNewLabel_1 = new JLabel("ID");
-		lblNewLabel_1.setFont(new Font("����", Font.BOLD, 15));
-		lblNewLabel_1.setBounds(48, 117, 50, 15);
-		add(lblNewLabel_1);
+		JLabel lblID = new JLabel("ID");
+		lblID.setFont(new Font("����", Font.BOLD, 15));
+		lblID.setBounds(48, 117, 50, 15);
+		add(lblID);
 		
-		textField = new JTextField();
-		textField.setText(" ");
-		textField.setBounds(106, 113, 222, 21);
-		add(textField);
-		textField.setColumns(10);
+		tfID = new JTextField();
+		tfID.setText(" ");
+		tfID.setBounds(106, 113, 222, 21);
+		add(tfID);
+		tfID.setColumns(10);
 		
-		JLabel pw = new JLabel("PW");
-		pw.setFont(new Font("����", Font.BOLD, 15));
-		pw.setBounds(48, 147, 50, 26);
-		add(pw);
+		JLabel lblPassword = new JLabel("PW");
+		lblPassword.setFont(new Font("����", Font.BOLD, 15));
+		lblPassword.setBounds(48, 147, 50, 26);
+		add(lblPassword);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(109, 149, 222, 21);
-		add(textField_1);
+		pfPassword = new JPasswordField();
+		pfPassword.setBounds(106, 148, 222, 26);
+		add(pfPassword);
 		
-		JLabel lblNewLabel_1_2 = new JLabel("\uC8FC\uC18C");
-		lblNewLabel_1_2.setFont(new Font("����", Font.BOLD, 15));
-		lblNewLabel_1_2.setBounds(47, 191, 50, 15);
-		add(lblNewLabel_1_2);
+		JLabel lblAddress = new JLabel("\uC8FC\uC18C");
+		lblAddress.setFont(new Font("����", Font.BOLD, 15));
+		lblAddress.setBounds(47, 191, 50, 15);
+		add(lblAddress);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(109, 187, 222, 21);
-		add(textField_2);
+		tfAddress = new JTextField();
+		tfAddress.setColumns(10);
+		tfAddress.setBounds(109, 187, 222, 21);
+		add(tfAddress);
 		
-		JLabel lblNewLabel_1_3 = new JLabel("\uC774\uBA54\uC77C");
-		lblNewLabel_1_3.setFont(new Font("����", Font.BOLD, 15));
-		lblNewLabel_1_3.setBounds(45, 229, 50, 15);
-		add(lblNewLabel_1_3);
+		JLabel lblEmail = new JLabel("\uC774\uBA54\uC77C");
+		lblEmail.setFont(new Font("����", Font.BOLD, 15));
+		lblEmail.setBounds(48, 259, 50, 15);
+		add(lblEmail);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(111, 225, 222, 21);
-		add(textField_3);
+		tfEmail = new JTextField();
+		tfEmail.setColumns(10);
+		tfEmail.setBounds(114, 255, 222, 21);
+		add(tfEmail);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(113, 265, 222, 21);
-		add(textField_4);
+		JLabel lblPhone = new JLabel("\uC804\uD654\uBC88\uD638");
+		lblPhone.setFont(new Font("����", Font.BOLD, 15));
+		lblPhone.setBounds(51, 292, 68, 17);
+		add(lblPhone);
 		
-		JLabel lblNewLabel_1_5 = new JLabel("\uC804\uD654\uBC88\uD638");
-		lblNewLabel_1_5.setFont(new Font("����", Font.BOLD, 15));
-		lblNewLabel_1_5.setBounds(44, 310, 68, 17);
-		add(lblNewLabel_1_5);
+		tfPhone = new JTextField();
+		tfPhone.setColumns(10);
+		tfPhone.setBounds(122, 288, 222, 21);
+		add(tfPhone);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(115, 306, 222, 21);
-		add(textField_5);
-		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(114, 348, 222, 21);
-		add(textField_6);
-		
-		JButton btnNewButton = new JButton("\uC911\uBCF5\uD655\uC778");
-		btnNewButton.setBounds(347, 113, 91, 26);
-		add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("\uD68C\uC6D0\uAC00\uC785 \uC644\uB8CC");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnOverlapCheck = new JButton("\uC911\uBCF5\uD655\uC778");
+		btnOverlapCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				Main.frame.getContentPane().add(new Panel1());
+				overlapCheck();
 			}
 		});
-		btnNewButton_1.setBounds(218, 395, 116, 26);
-		add(btnNewButton_1);
+		btnOverlapCheck.setBounds(347, 113, 91, 26);
+		add(btnOverlapCheck);
+		
+		JButton btnInsert = new JButton("\uD68C\uC6D0\uAC00\uC785 \uC644\uB8CC");
+		btnInsert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				makeAccount();
+				
+				
+			}
+		});
+		btnInsert.setBounds(218, 395, 116, 26);
+		add(btnInsert);
+		
+		JLabel lblName = new JLabel("이름");
+		lblName.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblName.setBounds(48, 222, 50, 15);
+		add(lblName);
+		
+		tfName = new JTextField();
+		tfName.setColumns(10);
+		tfName.setBounds(110, 218, 222, 21);
+		add(tfName);
 
+	}
+	
+	
+	private void overlapCheck() {
+		DaoLogin dao = new DaoLogin(tfID.getText().trim());
+		boolean result = dao.overlapCheck();
+		if(!result) {
+			tfID.setText("");
+			tfID.requestFocus();
+		}
+	}
+	
+	private void makeAccount() {
+		DaoLogin dao = new DaoLogin(tfID.getText().trim(), pfPassword.getText().trim() , 
+				tfAddress.getText().trim() , tfName.getText().trim(),
+				tfEmail.getText().trim(), tfPhone.getText().trim());
+		boolean result = dao.makeAccount();
+		if(result) {
+			setVisible(false);
+			Main.frame.getContentPane().add(new Panel1());
+		}
 	}
 }

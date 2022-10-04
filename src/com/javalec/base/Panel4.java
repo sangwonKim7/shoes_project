@@ -39,6 +39,8 @@ public class Panel4 extends JPanel {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
+	private JButton btnNext;
+	private JButton btnPrev;
 	
 	public static int detail_no;
 
@@ -110,6 +112,8 @@ public class Panel4 extends JPanel {
 		textField_4.setColumns(10);
 		textField_4.setBounds(262, 349, 130, 26);
 		add(textField_4);
+		add(getBtnNext());
+		add(getBtnPrev());
 
 	}
 
@@ -131,7 +135,6 @@ public class Panel4 extends JPanel {
 					if (e.getButton() == 1) {
 						tableClick();
 					}
-
 				}
 			});
 			Inner_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -172,13 +175,39 @@ public class Panel4 extends JPanel {
 			btnCart.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					insertToCartAction();
+				}
+			});
+			btnCart.setBounds(240, 382, 173, 29);
+		}
+		return btnCart;
+	}
+
+	private JButton getBtnNext() {
+		if (btnNext == null) {
+			btnNext = new JButton("결제창으로 넘어가기");
+			btnNext.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					setVisible(false);
 					Main.frame.getContentPane().add(new Panel5());
 				}
 			});
-			btnCart.setBounds(296, 394, 117, 29);
+			btnNext.setBounds(240, 423, 173, 29);
 		}
-		return btnCart;
+		return btnNext;
+	}
+
+	private JButton getBtnPrev() {
+		if (btnPrev == null) {
+			btnPrev = new JButton("상품 목록으로 돌아가기");
+			btnPrev.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+					Main.frame.getContentPane().add(new Panel3());
+				}
+			});
+			btnPrev.setBounds(64, 423, 173, 29);
+		}
+		return btnPrev;
 	}
 
 	// -------------------------------- Function -----------------------------------
@@ -237,20 +266,27 @@ public class Panel4 extends JPanel {
 			DtoProduct dtoPro = daoPro.tableClick();
 			
 			textField_3.setText(Integer.toString(dto.getSize()));
-			textField_1.setText(dtoPro.getModel());
 			textField.setText(Integer.toString(dtoPro.getPrice()));
+			textField_1.setText(dtoPro.getModel());
 			textField_2.setText(dtoPro.getBrand());
 	}
 	
 	private void insertToCartAction() {
 		try {
+			int selectRow = Inner_Table.getSelectedRow();
+			String wkSequence = (String) Inner_Table.getValueAt(selectRow, 2);
 			int num = Integer.parseInt(textField_4.getText().trim());
-			DaoCart dao = new DaoCart(Integer.parseInt(textField.getText().trim()), num);
-			dao.insertToCartAction();
+			
+			if(num > Integer.parseInt(wkSequence)) {
+				textField_4.setText("");
+			}else {
+				DaoCart dao = new DaoCart(Integer.parseInt(textField.getText().trim()), num);
+				dao.insertToCartAction();
+			}
+			
 		}catch(NumberFormatException e) {
+			textField_4.setText("");
 			e.printStackTrace();
 		}
 	}
-	
-
 } // End

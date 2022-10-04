@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,7 +29,7 @@ public class Panel5 extends JPanel {
 	private JTable Inner_Table;
 	private JTextField textField;
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
-	
+
 	int sum = 0;
 
 	/**
@@ -41,6 +42,7 @@ public class Panel5 extends JPanel {
 				sum = searchAction();
 				textField.setText(Integer.toString(sum));
 			}
+
 			public void ancestorMoved(AncestorEvent event) {
 			}
 
@@ -90,13 +92,21 @@ public class Panel5 extends JPanel {
 		btnBuy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				insertToPayAction();
-				
-				setVisible(false);
-				Main.frame.getContentPane().add(new Panel3());
+
 			}
 		});
 		btnBuy.setBounds(316, 399, 117, 29);
 		add(btnBuy);
+
+		JButton btnBuy_1 = new JButton("구매안하기");
+		btnBuy_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				Main.frame.getContentPane().add(new Panel3());
+			}
+		});
+		btnBuy_1.setBounds(196, 399, 117, 29);
+		add(btnBuy_1);
 
 	}
 
@@ -122,11 +132,11 @@ public class Panel5 extends JPanel {
 		TableColumn col = Inner_Table.getColumnModel().getColumn(vColIndex);
 		int width = 50;
 		col.setPreferredWidth(width);
-		
+
 		vColIndex = 1;
 		col = Inner_Table.getColumnModel().getColumn(vColIndex);
 		width = 100;
-		
+
 		vColIndex = 2;
 		col = Inner_Table.getColumnModel().getColumn(vColIndex);
 		width = 100;
@@ -158,16 +168,14 @@ public class Panel5 extends JPanel {
 			DtoProduct dtoPro = daoPro.tableClick();
 			DaoDetail daoDet = new DaoDetail(num2);
 			DtoDetail dtoDet = daoDet.tableClick();
-			String[] qTxt = { Integer.toString(a.getCart_no()), dtoPro.getModel(), Integer.toString(dtoDet.getSize()), Integer.toString(a.getAmount()),
-					dtoPro.getBrand(), Integer.toString(a.getPrice()) };
+			String[] qTxt = { Integer.toString(a.getCart_no()), dtoPro.getModel(), Integer.toString(dtoDet.getSize()),
+					Integer.toString(a.getAmount()), dtoPro.getBrand(), Integer.toString(a.getPrice()) };
 			sum += a.getAmount() * a.getPrice();
 			Outer_Table.addRow(qTxt);
 		}
-		
-		
 		return sum;
 	}
-	
+
 	private void deleteAction() {
 		int selectRow = Inner_Table.getSelectedRow();
 		String wkSequence = (String) Inner_Table.getValueAt(selectRow, 0);
@@ -177,11 +185,17 @@ public class Panel5 extends JPanel {
 		sum = searchAction();
 		textField.setText(Integer.toString(sum));
 	}
-	
+
 	private void insertToPayAction() {
 		DaoCart dao = new DaoCart();
-		dao.insertToPayAction();
-		dao.updateAction();
+		DaoDetail daoDet = new DaoDetail();
+		
+		boolean result = daoDet.updateDetailAction();
+		
+		if(result) {
+			setVisible(false);
+			Main.frame.getContentPane().add(new Panel3());
+		}
 	}
-	
+
 }

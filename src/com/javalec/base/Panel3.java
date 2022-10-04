@@ -74,6 +74,17 @@ public class Panel3 extends JPanel {
 		add(getLblNewLabel());
 		add(getLblNewLabel_1());
 		add(getLblNewLabel_2());
+		
+		JButton btnLogout = new JButton("로그아웃");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Panel1.id = "";
+				setVisible(false);
+				Main.frame.getContentPane().add(new Panel1());
+			}
+		});
+		btnLogout.setBounds(18, 18, 117, 29);
+		add(btnLogout);
 
 	}
 
@@ -126,6 +137,11 @@ public class Panel3 extends JPanel {
 	private JButton getBtnQuery() {
 		if (btnQuery == null) {
 			btnQuery = new JButton("검색");
+			btnQuery.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
 			btnQuery.setBounds(251, 374, 74, 29);
 		}
 		return btnQuery;
@@ -148,6 +164,12 @@ public class Panel3 extends JPanel {
 	private JButton getBtnShowAll() {
 		if (btnShowAll == null) {
 			btnShowAll = new JButton("전체보기");
+			btnShowAll.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tableInit();
+					searchAction();
+				}
+			});
 			btnShowAll.setBounds(337, 374, 94, 29);
 		}
 		return btnShowAll;
@@ -256,7 +278,7 @@ public class Panel3 extends JPanel {
 	// ------------------------------------------------
 	private void conditionQueryAction(String conditionQueryColumn) {
 
-		DaoProduct dao = new DaoProduct(conditionQueryColumn, tfSelection.getText());
+		DaoProduct dao = new DaoProduct(conditionQueryColumn, tfSelection.getText().trim());
 		ArrayList<DtoProduct> dtoList = dao.conditionList();
 
 		int listCount = dtoList.size();
@@ -284,12 +306,4 @@ public class Panel3 extends JPanel {
 		clickPrice = dto.getPrice();
 
 	}
-
-	private JTable getTable() {
-		if (table == null) {
-			table = new JTable();
-		}
-		return table;
-	}
-
 } // End
